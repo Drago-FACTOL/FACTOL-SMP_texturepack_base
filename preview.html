@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FACTOL Network</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #070a12, #05060a);
+    color: white;
+    overflow-x: hidden;
+    cursor: none;
+}
+
+/* background */
+.bg {
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, #00ffe1, #6a00ff, #ff00aa);
+    opacity: 0.07;
+    animation: move 16s linear infinite;
+    z-index: -1;
+}
+
+@keyframes move {
+    0% {transform: translate(0,0);}
+    50% {transform: translate(-10%,10%);}
+    100% {transform: translate(0,0);}
+}
+
+/* CURSORE */
+.cursor-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #00ffe1;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 12px #00ffe1;
+}
+
+.cursor-ring {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,255,225,0.6);
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9998;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 18px 20px 5px;
+}
+
+.logo {
+    width: 620px;
+    margin-bottom: -15px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(0,255,225,0.25));
+}
+
+@keyframes float {
+    0%,100% {transform: translateY(0);}
+    50% {transform: translateY(-12px);}
+}
+
+.subtitle {
+    color: #b8b8b8;
+    margin-top: 0px;
+}
+
+/* STATUS */
+.status-box {
+    margin: 18px auto;
+    padding: 18px;
+    width: 380px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 0 25px rgba(0,255,225,0.08);
+    cursor: pointer;
+}
+
+.status-online { color: #00ff88; font-weight: bold; }
+.status-offline { color: #ff4d4d; font-weight: bold; }
+
+.ip-box {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+
+.ip-box:hover {
+    background: #00ffe1;
+    color: black;
+}
+
+/* DROPDOWN */
+.dropdown {
+    display: none;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 10px;
+}
+
+/* PLAYER */
+.player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+}
+
+.player img {
+    width: 22px;
+    height: 22px;
+}
+
+/* SECTIONS */
+.section {
+    text-align: center;
+    padding: 35px;
+}
+
+.owners {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.owner {
+    background: rgba(255,255,255,0.04);
+    padding: 18px;
+    border-radius: 14px;
+    width: 170px;
+    transition: 0.3s;
+}
+
+.owner:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.08);
+}
+
+.owner img {
+    width: 110px;
+    cursor: pointer;
+}
+
+/* LINKS */
+.links a {
+    display: inline-block;
+    margin: 10px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    background: rgba(255,255,255,0.05);
+}
+
+.links a:hover {
+    background: #00ffe1;
+    color: black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="cursor-dot" id="dot"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<header>
+
+    <img class="logo" src="https://cdn.phototourl.com/free/2026-06-03-eb755946-c09a-46eb-99d4-2b71dbe712e0.png">
+
+    <p class="subtitle">Minecraft Network • SMP • Community Italiana</p>
+
+    <div class="status-box" onclick="togglePlayers()">
+
+        <div id="status">Caricamento...</div>
+        <div id="count"></div>
+
+        <div class="dropdown" id="dropdown"></div>
+
+        <div class="ip-box" onclick="copyIP(event)">
+            Clicca per copiare IP: <b>cubempire.factol.it</b>
+        </div>
+
+    </div>
+
+</header>
+
+<div class="section">
+    <h2>Owners</h2>
+
+    <div class="owners">
+
+        <div class="owner">
+            <img onclick="openNameMC('Papa_Orlando_I')" src="https://mc-heads.net/avatar/Papa_Orlando_I">
+            <p>Papa_Orlando_I</p>
+        </div>
+
+        <div class="owner">
+            <img onclick="openNameMC('Dragon_45_')" src="https://mc-heads.net/avatar/Dragon_45_">
+            <p>Dragon_45_</p>
+        </div>
+
+        <div class="owner">
+            <img onclick="openNameMC('LB_2015')" src="https://mc-heads.net/avatar/LB_2015">
+            <p>LB_2015</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- PARTNERSHIP -->
+<div class="section">
+    <h2>Cube Empire • Partnership</h2>
+
+    <p style="color:#aaa; margin-top:-10px;">
+        Collaborazioni ufficiali del progetto Factol Cube Empire
+    </p>
+
+    <div class="owners">
+
+        <div class="owner">
+            <img onclick="openNameMC('yumi040')" src="https://mc-heads.net/avatar/yumi040">
+            <p>yumi040</p>
+        </div>
+
+        <div class="owner">
+            <img onclick="openNameMC('iamDark_yt')" src="https://mc-heads.net/avatar/iamDark_yt">
+            <p>iamDark_yt</p>
+        </div>
+
+    </div>
+</div>
+
+<div class="section">
+    <h2>Community</h2>
+
+    <div class="links">
+        <a href="https://discord.gg/9vZysHV6ca">Discord</a>
+        <a href="https://www.youtube.com/@FACTOLMinecraft-ITA">YouTube</a>
+    </div>
+</div>
+
+<script>
+
+/* CURSORE */
+const dot = document.getElementById("dot");
+const ring = document.getElementById("ring");
+
+let x = 0, y = 0;
+let rx = 0, ry = 0;
+
+document.addEventListener("mousemove", e => {
+    x = e.clientX;
+    y = e.clientY;
+
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
+});
+
+function animate(){
+    rx += (x - rx) * 0.15;
+    ry += (y - ry) * 0.15;
+
+    ring.style.left = rx + "px";
+    ring.style.top = ry + "px";
+
+    requestAnimationFrame(animate);
+}
+animate();
+
+/* COPY IP */
+function copyIP(e){
+    e.stopPropagation();
+
+    const ip = "cubempire.factol.it";
+
+    navigator.clipboard.writeText(ip).then(() => {
+        popup("IP copiato: " + ip);
+    }).catch(() => {
+        const t = document.createElement("textarea");
+        t.value = ip;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+
+        popup("IP copiato: " + ip);
+    });
+}
+
+function popup(text){
+    const d = document.createElement("div");
+    d.innerText = text;
+    d.style.position = "fixed";
+    d.style.bottom = "30px";
+    d.style.left = "50%";
+    d.style.transform = "translateX(-50%)";
+    d.style.padding = "10px 18px";
+    d.style.background = "rgba(0,0,0,0.7)";
+    d.style.border = "1px solid #00ffe1";
+    d.style.color = "#00ffe1";
+    d.style.borderRadius = "10px";
+    d.style.zIndex = "99999";
+
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 1500);
+}
+
+/* NAME MC */
+function openNameMC(name){
+    window.open("https://namemc.com/profile/" + name, "_blank");
+}
+
+/* PLAYER STATUS */
+let players = [];
+
+async function update(){
+    const r = await fetch("https://api.mcsrvstat.us/2/cubempire.factol.it");
+    const d = await r.json();
+
+    if(d.online){
+        document.getElementById("status").innerText = "Server Online";
+        document.getElementById("count").innerText =
+            d.players.online + " / " + d.players.max + " player";
+
+        players = d.players.list || [];
+        render();
+    } else {
+        document.getElementById("status").innerText = "Server Offline";
+    }
+}
+
+function render(){
+    const box = document.getElementById("dropdown");
+    box.innerHTML = "";
+
+    players.forEach(p => {
+        box.innerHTML += `
+        <div class="player">
+            <img src="https://mc-heads.net/avatar/${p}">
+            <span>${p}</span>
+        </div>`;
+    });
+}
+
+function togglePlayers(){
+    const b = document.getElementById("dropdown");
+    b.style.display = b.style.display === "block" ? "none" : "block";
+}
+
+update();
+setInterval(update, 10000);
+
+</script>
+
+</body>
+</html>
